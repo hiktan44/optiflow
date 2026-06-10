@@ -1,0 +1,28 @@
+{
+  "name": "optiflow",
+  "description": "Visual A/B testing platform for growth marketers",
+  "build": {
+    "type": "dockerfile",
+    "dockerfile": "Dockerfile"
+  },
+  "deploy": {
+    "port": 3000,
+    "healthcheck": {
+      "path": "/api/health",
+      "interval": 30,
+      "timeout": 10,
+      "retries": 3
+    }
+  },
+  "environment": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "STRIPE_PRO_PRICE_ID",
+    "STRIPE_ENTERPRISE_PRICE_ID",
+    "NEXT_PUBLIC_APP_URL"
+  ]
+}

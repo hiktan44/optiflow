@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <radialGradient id="iglow" cx="20%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#4F46E5" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#4F46E5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gglow" cx="85%" cy="72%" r="32%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.13"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#iglow)"/>
+  <rect width="1200" height="630" fill="url(#gglow)"/>
+
+  <path d="M0 126 H1200 M0 252 H1200 M0 378 H1200 M0 504 H1200" stroke="#334155" stroke-width="0.5" opacity="0.3"/>
+  <path d="M240 0 V630 M480 0 V630 M720 0 V630 M960 0 V630" stroke="#334155" stroke-width="0.5" opacity="0.3"/>
+
+  <rect x="0" y="0" width="5" height="630" fill="#4F46E5"/>
+
+  <g transform="translate(80, 55) scale(1.4)">
+    <rect width="64" height="64" rx="13" fill="#4F46E5"/>
+    <circle cx="32" cy="14" r="5" fill="white"/>
+    <line x1="32" y1="19" x2="32" y2="27" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M32 27 Q26 35 20 44" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.5"/>
+    <path d="M32 27 Q38 35 44 44" stroke="#34D399" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="20" cy="48" r="4" fill="white" fill-opacity="0.45"/>
+    <circle cx="44" cy="48" r="9" fill="#34D399" fill-opacity="0.18"/>
+    <circle cx="44" cy="48" r="5" fill="#34D399"/>
+  </g>
+
+  <text x="80" y="268" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="90" font-weight="800" fill="white" letter-spacing="-2">OptiFlow</text>
+
+  <text x="82" y="320" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="28" font-weight="400" fill="#94A3B8">Visual A/B Testing for Growth Teams</text>
+
+  <text x="82" y="368" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" fill="#64748B">No code. Bayesian statistics. Launch experiments in minutes.</text>
+
+  <rect x="82" y="405" width="145" height="36" rx="18" fill="#4F46E5" fill-opacity="0.2" stroke="#4F46E5" stroke-width="1" stroke-opacity="0.6"/>
+  <text x="154" y="428" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#818CF8" text-anchor="middle" font-weight="500">A/B Testing</text>
+
+  <rect x="238" y="405" width="155" height="36" rx="18" fill="#10B981" fill-opacity="0.12" stroke="#10B981" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="315" y="428" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#34D399" text-anchor="middle" font-weight="500">Visual Editor</text>
+
+  <rect x="404" y="405" width="130" height="36" rx="18" fill="#F59E0B" fill-opacity="0.12" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="469" y="428" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#FCD34D" text-anchor="middle" font-weight="500">No Code</text>
+
+  <rect x="730" y="75" width="400" height="480" rx="20" fill="#1E293B" fill-opacity="0.95" stroke="#334155" stroke-width="1.5"/>
+
+  <text x="930" y="120" font-family="Inter, -apple-system, sans-serif" font-size="15" fill="#64748B" text-anchor="middle" font-weight="600" letter-spacing="1.5">EXPERIMENT RESULTS</text>
+  <line x1="750" y1="138" x2="1110" y2="138" stroke="#334155" stroke-width="1"/>
+
+  <rect x="790" y="287" width="110" height="168" rx="6" fill="#4F46E5" fill-opacity="0.45"/>
+  <text x="845" y="277" font-family="Inter, -apple-system, sans-serif" font-size="22" fill="white" font-weight="700" text-anchor="middle">4.2%</text>
+
+  <rect x="968" y="212" width="110" height="243" rx="6" fill="#10B981" fill-opacity="0.85"/>
+  <rect x="968" y="212" width="110" height="243" rx="6" fill="none" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+  <text x="1023" y="202" font-family="Inter, -apple-system, sans-serif" font-size="22" fill="white" font-weight="700" text-anchor="middle">6.8%</text>
+
+  <rect x="978" y="168" width="90" height="26" rx="13" fill="#10B981"/>
+  <text x="1023" y="185" font-family="Inter, -apple-system, sans-serif" font-size="13" fill="white" text-anchor="middle" font-weight="600">Winner ✓</text>
+
+  <text x="845" y="477" font-family="Inter, -apple-system, sans-serif" font-size="15" fill="#64748B" text-anchor="middle">Variant A</text>
+  <text x="1023" y="477" font-family="Inter, -apple-system, sans-serif" font-size="15" fill="#64748B" text-anchor="middle">Variant B</text>
+
+  <line x1="750" y1="495" x2="1110" y2="495" stroke="#334155" stroke-width="1"/>
+
+  <text x="930" y="527" font-family="Inter, -apple-system, sans-serif" font-size="28" fill="#34D399" font-weight="800" text-anchor="middle">+62% Lift</text>
+  <text x="930" y="549" font-family="Inter, -apple-system, sans-serif" font-size="13" fill="#475569" text-anchor="middle">99% confidence · 14 days · 12,400 visitors</text>
+
+  <line x1="80" y1="568" x2="1120" y2="568" stroke="#1E293B" stroke-width="2"/>
+  <text x="80" y="600" font-family="Inter, -apple-system, sans-serif" font-size="17" fill="#475569">optiflow.io</text>
+  <text x="1120" y="600" font-family="Inter, -apple-system, sans-serif" font-size="17" fill="#475569" text-anchor="end">Visual Experimentation Platform</text>
+</svg>
