@@ -4,9 +4,12 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co'
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-key'
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {
@@ -25,7 +28,9 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock")
+  const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
+                 process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock") ||
+                 !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   let user = null
 
   if (isMock) {
