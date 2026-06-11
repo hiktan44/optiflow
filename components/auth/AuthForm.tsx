@@ -57,7 +57,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         toast.success('Demo girişi başarılı!')
         router.push('/dashboard')
         router.refresh()
-      } catch (err) {
+      } catch {
         toast.error('Giriş yapılırken bir hata oluştu.')
       } finally {
         setLoading(false)
