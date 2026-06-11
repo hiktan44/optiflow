@@ -27,16 +27,44 @@ export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
+  const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock")
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: isMock && mode === 'login' ? {
+      email: 'admin@example.com',
+      password: 'admin123'
+    } : undefined
   })
 
   const onSubmit = async (data: FormData) => {
     setLoading(true)
+
+    if (isMock) {
+      try {
+        if (mode === 'signup') {
+          toast.info('Demo modunda yeni kayıt oluşturulamaz. Lütfen hazır demo hesabı ile giriş yapın.')
+          setLoading(false)
+          return
+        }
+        
+        // Demo Giriş Bypass
+        document.cookie = "optiflow-mock-session=true; path=/; max-age=86400"
+        toast.success('Demo girişi başarılı!')
+        router.push('/dashboard')
+        router.refresh()
+      } catch (err) {
+        toast.error('Giriş yapılırken bir hata oluştu.')
+      } finally {
+        setLoading(false)
+      }
+      return
+    }
+
     const supabase = createClient()
 
     try {
@@ -71,6 +99,13 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      {isMock && mode === 'login' && (
+        <div className="p-3 mb-2 text-xs rounded-lg border border-amber-200/50 bg-amber-50/50 text-amber-800 dark:bg-amber-950/20 dark:border-amber-900/30 dark:text-amber-300">
+          <p className="font-semibold mb-1">🔑 Demo Giriş Bilgileri:</p>
+          <p>E-posta: <code className="bg-amber-100/60 dark:bg-amber-950/40 px-1 py-0.5 rounded">admin@example.com</code></p>
+          <p className="mt-0.5">Şifre: <code className="bg-amber-100/60 dark:bg-amber-950/40 px-1 py-0.5 rounded">admin123</code></p>
+        </div>
+      )}
       <Input
         label="Email"
         type="email"

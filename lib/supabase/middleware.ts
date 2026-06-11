@@ -25,9 +25,22 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock")
+  let user = null
+
+  if (isMock) {
+    const hasMockSession = request.cookies.get('optiflow-mock-session')?.value === 'true'
+    if (hasMockSession) {
+      user = { id: 'mock-user-id', email: 'admin@example.com' }
+    }
+  } else {
+    try {
+      const { data } = await supabase.auth.getUser()
+      user = data.user
+    } catch {
+      // ignore
+    }
+  }
 
   const { pathname } = request.nextUrl
 
