@@ -2,9 +2,19 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
-               process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock") ||
-               !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const checkMock = async () => {
+  try {
+    const cookieStore = await cookies()
+    const hasMockSession = cookieStore.get('optiflow-mock-session')?.value === 'true'
+    if (hasMockSession) return true
+  } catch {
+    // Ignore cookies read error in some contexts
+  }
+  
+  return !process.env.NEXT_PUBLIC_SUPABASE_URL || 
+         process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock") ||
+         !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+}
 
 // Mock Supabase Client Proxy
 export const createMockSupabase = () => {
@@ -19,7 +29,7 @@ export const createMockSupabase = () => {
         return (resolve: any) => resolve(mockResult)
       }
       
-      if (['select', 'eq', 'single', 'order', 'limit', 'range', 'insert', 'update', 'upsert', 'delete', 'match', 'or', 'neq', 'gt', 'lt'].includes(prop)) {
+      if (['select', 'eq', 'single', 'order', 'limit', 'range', 'insert', 'update', 'upsert', 'delete', 'match', 'or', 'neq', 'gt', 'lt', 'in'].includes(prop)) {
         return (...args: any[]) => {
           if (prop === 'single') {
             target._single = true
@@ -32,48 +42,31 @@ export const createMockSupabase = () => {
               credits_used: 2,
               created_at: new Date().toISOString()
             }
-          } else if (target._table === 'creatives') {
+          } else if (target._table === 'projects') {
+            target._data = target._single ? {
+              id: 'mock-project-id',
+              name: 'Demo Proje'
+            } : [
+              { id: 'mock-project-id', name: 'Demo Proje' }
+            ]
+          } else if (target._table === 'experiments') {
             target._data = target._single ? {
               id: 'mock-creative-id',
-              name: 'Demo Kreatif',
+              name: 'Demo Deney',
               status: 'completed',
-              image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe',
-              credits_used: 1,
               created_at: new Date().toISOString()
             } : [
               {
                 id: 'mock-creative-id-1',
-                name: 'Kreatif Kampanya A',
-                status: 'completed',
-                image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe',
-                credits_used: 1,
+                name: 'Anasayfa A/B Testi',
+                status: 'running',
                 created_at: new Date().toISOString()
               },
               {
                 id: 'mock-creative-id-2',
-                name: 'Kreatif Kampanya B',
+                name: 'Ödeme Butonu Renk Deneyi',
                 status: 'completed',
-                image_url: 'https://images.unsplash.com/photo-1618005148471-26c9943e6590',
-                credits_used: 1,
                 created_at: new Date().toISOString()
-              }
-            ]
-          } else if (target._table === 'brand_kits') {
-            target._data = target._single ? {
-              id: 'mock-brand-id',
-              name: 'Demo Marka',
-              logo_url: null,
-              primary_color: '#7C3AED',
-              secondary_color: '#10B981',
-              font_family: 'Inter'
-            } : [
-              {
-                id: 'mock-brand-id',
-                name: 'Demo Marka',
-                logo_url: null,
-                primary_color: '#7C3AED',
-                secondary_color: '#10B981',
-                font_family: 'Inter'
               }
             ]
           }
@@ -116,7 +109,7 @@ export const createMockSupabase = () => {
 }
 
 export async function createClient() {
-  if (isMock) return createMockSupabase()
+  if (await checkMock()) return createMockSupabase()
 
   const cookieStore = await cookies()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -145,7 +138,7 @@ export async function createClient() {
 }
 
 export async function createServiceClient() {
-  if (isMock) return createMockSupabase()
+  if (await checkMock()) return createMockSupabase()
 
   const cookieStore = await cookies()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -174,7 +167,13 @@ export async function createServiceClient() {
 }
 
 export function createAdminClient() {
-  if (isMock) return createMockSupabase()
+  // admin client server.ts'de async olmadığı için checkMock'u senkronize okumalıyız
+  // Ancak admin client normalde build-time'da veya backend eventlerinde çağrılır.
+  // Burada env bazlı mock kontrolü yeterli olacaktır.
+  const isEnvMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
+                    process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock") ||
+                    !process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (isEnvMock) return createMockSupabase()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!

@@ -28,7 +28,9 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || 
+  const hasMockSession = request.cookies.get('optiflow-mock-session')?.value === 'true'
+  const isMock = hasMockSession ||
+                 !process.env.NEXT_PUBLIC_SUPABASE_URL || 
                  process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock") ||
                  !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   let user = null
