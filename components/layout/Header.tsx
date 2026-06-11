@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/DropdownMenu'
 import { LogOut, User, CreditCard } from 'lucide-react'
 import Link from 'next/link'
+import { logoutAction } from '@/actions/auth'
 
 interface HeaderProps {
   breadcrumb?: { label: string; href?: string }[]
@@ -89,7 +90,7 @@ function UserMenu({ email, initials }: { email: string; initials: string }) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <form action="/api/auth/signout" method="POST">
+          <form action={logoutAction}>
             <button type="submit" className="flex w-full items-center gap-2 text-[#EF4444]">
               <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
               Sign out

@@ -9,12 +9,13 @@ import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { loginAction, signupAction } from '@/actions/auth'
 
 const schema = z.object({
-  email: z.string().email('Please enter a valid email'),
+  email: z.string().email('Geçerli bir e-posta adresi girin'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters'),
+    .min(8, 'Şifre en az 8 karakter olmalıdır'),
 })
 
 type FormData = z.infer<typeof schema>
@@ -44,54 +45,29 @@ export function AuthForm({ mode }: AuthFormProps) {
   const onSubmit = async (data: FormData) => {
     setLoading(true)
 
-    if (isMock) {
-      try {
-        if (mode === 'signup') {
-          toast.info('Demo modunda yeni kayıt oluşturulamaz. Lütfen hazır demo hesabı ile giriş yapın.')
-          setLoading(false)
-          return
-        }
-        
-        // Demo Giriş Bypass
-        document.cookie = "optiflow-mock-session=true; path=/; max-age=86400"
-        toast.success('Demo girişi başarılı!')
-        router.push('/dashboard')
-        router.refresh()
-      } catch {
-        toast.error('Giriş yapılırken bir hata oluştu.')
-      } finally {
-        setLoading(false)
-      }
-      return
-    }
-
-    const supabase = createClient()
+    const formData = new FormData()
+    formData.append('email', data.email)
+    formData.append('password', data.password)
 
     try {
       if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({
-          email: data.email,
-          password: data.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
-          },
-        })
-        if (error) throw error
-        toast.success('Check your email to confirm your account!')
-        router.push('/login')
+        const res = await signupAction(null, formData)
+        if (res && 'error' in res) {
+          toast.error(res.error)
+        } else {
+          toast.success('Kayıt başarılı! Lütfen giriş yapın.')
+          router.push('/login')
+        }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: data.email,
-          password: data.password,
-        })
-        if (error) throw error
-        router.push('/dashboard')
-        router.refresh()
+        const res = await loginAction(null, formData)
+        if (res && 'error' in res) {
+          toast.error(res.error)
+        } else {
+          toast.success('Giriş başarılı!')
+        }
       }
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Something went wrong'
-      toast.error(message)
+      toast.error('Giriş/Kayıt işlemi sırasında bir hata oluştu.')
     } finally {
       setLoading(false)
     }
