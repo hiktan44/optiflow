@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 'use client'
 
 import { createBrowserClient } from '@supabase/ssr'
@@ -48,18 +49,21 @@ export const createMockSupabase = () => {
               id: 'mock-creative-id',
               name: 'Demo Deney',
               status: 'completed',
+              target_url: 'https://example.com',
               created_at: new Date().toISOString()
             } : [
               {
                 id: 'mock-creative-id-1',
                 name: 'Anasayfa A/B Testi',
                 status: 'running',
+                target_url: 'https://example.com',
                 created_at: new Date().toISOString()
               },
               {
                 id: 'mock-creative-id-2',
                 name: 'Ödeme Butonu Renk Deneyi',
                 status: 'completed',
+                target_url: 'https://example.com',
                 created_at: new Date().toISOString()
               }
             ]

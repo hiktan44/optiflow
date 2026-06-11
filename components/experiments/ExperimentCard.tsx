@@ -28,18 +28,20 @@ export function ExperimentCard({ experiment: exp }: ExperimentCardProps) {
                 {truncate(exp.description, 80)}
               </p>
             )}
-            <div className="mt-2 flex items-center gap-2">
-              <a
-                href={exp.target_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs text-[#64748B] hover:text-[#4F46E5] transition-colors"
-                aria-label={`Open ${exp.target_url} in new tab`}
-              >
-                <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                {truncate(exp.target_url.replace(/^https?:\/\//, ''), 40)}
-              </a>
-            </div>
+            {exp.target_url && (
+              <div className="mt-2 flex items-center gap-2">
+                <a
+                  href={exp.target_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-[#64748B] hover:text-[#4F46E5] transition-colors"
+                  aria-label={`Open ${exp.target_url} in new tab`}
+                >
+                  <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                  {truncate(exp.target_url.replace(/^https?:\/\//, ''), 40)}
+                </a>
+              </div>
+            )}
           </div>
         </div>
 

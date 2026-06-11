@@ -45,26 +45,36 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : 'button'
+    const commonProps = {
+      className: cn(
+        'inline-flex items-center justify-center gap-2 font-medium transition-colors',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+        'disabled:pointer-events-none disabled:opacity-50',
+        variantClasses[variant],
+        sizeClasses[size],
+        className
+      ),
+      ...props
+    }
+
+    if (asChild) {
+      return (
+        <Slot ref={ref} {...commonProps}>
+          {children}
+        </Slot>
+      )
+    }
 
     return (
-      <Comp
+      <button
         ref={ref}
-        className={cn(
-          'inline-flex items-center justify-center gap-2 font-medium transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:pointer-events-none disabled:opacity-50',
-          variantClasses[variant],
-          sizeClasses[size],
-          className
-        )}
         disabled={disabled || loading}
         aria-disabled={disabled || loading}
-        {...props}
+        {...commonProps}
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
         {children}
-      </Comp>
+      </button>
     )
   }
 )
