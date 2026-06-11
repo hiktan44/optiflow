@@ -3,7 +3,7 @@ FROM node:22-alpine AS deps
 RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
-RUN echo "only-built-dependencies[]=" > .npmrc
+RUN echo "dangerouslyAllowAllBuilds: true" > pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: build
