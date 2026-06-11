@@ -64,40 +64,45 @@ export async function Header({ breadcrumb }: HeaderProps) {
 
 function UserMenu({ email, initials }: { email: string; initials: string }) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4F46E5] text-xs font-semibold text-white hover:bg-[#4338CA] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
-        aria-label={`User menu for ${email}`}
-      >
-        {initials}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <div className="px-2 py-1.5">
-          <p className="text-xs text-[#64748B] truncate">{email}</p>
-        </div>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/settings" className="flex items-center gap-2">
-            <User className="h-3.5 w-3.5" aria-hidden="true" />
-            Account
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings" className="flex items-center gap-2">
-            <CreditCard className="h-3.5 w-3.5" aria-hidden="true" />
-            Billing
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <form action={logoutAction}>
-            <button type="submit" className="flex w-full items-center gap-2 text-[#EF4444]">
+    <>
+      <form id="logout-form" action={logoutAction} className="hidden" />
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4F46E5] text-xs font-semibold text-white hover:bg-[#4338CA] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
+          aria-label={`User menu for ${email}`}
+        >
+          {initials}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <div className="px-2 py-1.5">
+            <p className="text-xs text-[#64748B] truncate">{email}</p>
+          </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/settings" className="flex items-center gap-2">
+              <User className="h-3.5 w-3.5" aria-hidden="true" />
+              Account
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings" className="flex items-center gap-2">
+              <CreditCard className="h-3.5 w-3.5" aria-hidden="true" />
+              Billing
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <button
+              type="submit"
+              form="logout-form"
+              className="flex w-full items-center gap-2 text-[#EF4444] cursor-pointer"
+            >
               <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
               Sign out
             </button>
-          </form>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   )
 }
