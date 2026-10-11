@@ -1,0 +1,48 @@
+name: Veritabanı ve profil izinleri
+
+on:
+  push:
+    paths:
+      - 'supabase/migrations/**'
+      - 'tests/database_regressions.py'
+      - '.github/workflows/database-regressions.yml'
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'tests/database_regressions.py'
+      - '.github/workflows/database-regressions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  database:
+    name: PostgreSQL ${{ matrix.postgres }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres: ['14', '17']
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_PASSWORD: kurgu_test_parolasi
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: PostgreSQL istemcisini kur
+        run: sudo apt-get update -qq && sudo apt-get install -y postgresql-client
+      - name: Gerçek SQL regresyonlarını çalıştır
+        env:
+          OPTIFLOW_TEST_ADMIN_URL: postgresql://postgres:kurgu_test_parolasi@127.0.0.1:${{ job.services.postgres.ports[5432] }}/postgres
+          OPTIFLOW_TEST_ALLOW_DB_CREATE: '1'
+        run: python3 tests/database_regressions.py

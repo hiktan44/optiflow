@@ -76,7 +76,7 @@ create table goals (
 
 -- events (partitioned)
 create table events (
-  id             uuid default gen_random_uuid() primary key,
+  id             uuid default gen_random_uuid() not null,
   project_id     uuid references projects(id) on delete cascade not null,
   experiment_id  uuid references experiments(id),
   variation_id   uuid references variations(id),
@@ -85,7 +85,8 @@ create table events (
   visitor_id     text not null,
   event_type     text not null,
   metadata       jsonb not null default '{}',
-  created_at     timestamptz not null default now()
+  created_at     timestamptz not null default now(),
+  primary key (id, created_at)
 ) partition by range (created_at);
 
 create table events_2026_04 partition of events
@@ -96,6 +97,15 @@ create table events_2026_05 partition of events
 
 create table events_2026_06 partition of events
   for values from ('2026-06-01') to ('2026-07-01');
+
+-- Aylık bakım gecikse de olay kaydı tarih aralığı yüzünden durmasın.
+create table events_default partition of events default;
+
+-- API sorguları üst tabloyu kullanır; bölüm tabloları doğrudan açılamaz.
+alter table events_2026_04 enable row level security;
+alter table events_2026_05 enable row level security;
+alter table events_2026_06 enable row level security;
+alter table events_default enable row level security;
 
 -- subscriptions
 create table subscriptions (
@@ -127,7 +137,8 @@ create index idx_subscriptions_user_id      on subscriptions(user_id);
 -- RLS
 alter table profiles enable row level security;
 create policy "Users can view own profile"   on profiles for select using (auth.uid() = id);
-create policy "Users can update own profile" on profiles for update using (auth.uid() = id);
+create policy "Users can update own profile" on profiles for update to authenticated
+  using (auth.uid() = id) with check (auth.uid() = id);
 
 alter table projects enable row level security;
 create policy "Users can manage own projects" on projects for all using (auth.uid() = user_id);
@@ -167,3 +178,17 @@ create policy "Project owners read events" on events
 alter table subscriptions enable row level security;
 create policy "Users view own subscription" on subscriptions
   for select using (auth.uid() = user_id);
+
+-- Tablo ve sütun izinleri RLS'den ayrı uygulanır.
+revoke all on table profiles from public, anon, authenticated;
+revoke select (id, email, full_name, avatar_url, plan, stripe_customer_id, mtu_limit, created_at, updated_at),
+  insert (id, email, full_name, avatar_url, plan, stripe_customer_id, mtu_limit, created_at, updated_at),
+  update (id, email, full_name, avatar_url, plan, stripe_customer_id, mtu_limit, created_at, updated_at),
+  references (id, email, full_name, avatar_url, plan, stripe_customer_id, mtu_limit, created_at, updated_at)
+  on table profiles from public, anon, authenticated;
+grant select on profiles to authenticated;
+grant update (full_name, avatar_url) on profiles to authenticated;
+grant select, insert, update, delete on projects, experiments, variations, goals to authenticated;
+grant select on events, subscriptions to authenticated;
+grant select, insert, update, delete on profiles, projects, experiments, variations, goals, events, subscriptions to service_role;
+revoke all on events_2026_04, events_2026_05, events_2026_06, events_default from public, anon, authenticated;
